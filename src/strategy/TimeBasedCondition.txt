@@ -1,0 +1,19 @@
+package strategy;
+
+import model.Vault;
+
+import java.time.LocalDateTime;
+
+public class TimeBasedCondition implements ReleaseCondition {
+
+    private LocalDateTime releaseTime;
+
+    public TimeBasedCondition(LocalDateTime time) {
+        this.releaseTime = time;
+    }
+
+    @Override
+    public boolean shouldRelease(Vault vault) {
+        return LocalDateTime.now().isAfter(releaseTime);
+    }
+}
