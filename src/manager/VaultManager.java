@@ -1,9 +1,10 @@
 package manager;
-
 import model.*;
 import exception.DuplicateUserException;
 
 import java.util.*;
+import manager.UserManager;
+import exception.AuthenticationException;
 
 public class VaultManager {
 
@@ -49,5 +50,27 @@ public class VaultManager {
 
     public Collection<Vault> getAllVaults() {
         return vaults.values();
+    }
+
+    public void assignNominee(String vaultId, String nomineeEmail, UserManager userManager) throws Exception {
+        Vault vault = vaults.get(vaultId);
+        if(vault == null) {
+            throw new Exception("Vault not found!");
+        }
+
+        if(!userManager.isRegistered(nomineeEmail)) {
+            throw new Exception("Nominee must be a registered user!");
+        }
+        vault.setNominee((model.Nominee) userManager.getUser(nomineeEmail));
+    }
+
+    public void createVault(String vaultId, VaultOwner owner) throws Exception {
+
+        for(Vault v : vaults.values()) {
+            if(v.getOwner().getEmail().equals(owner.getEmail())) {
+            throw new Exception("User already owns a vault!");
+            }
+        }
+        vaults.put(vaultId, new Vault(vaultId, owner));
     }
 }

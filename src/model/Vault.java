@@ -41,4 +41,7 @@ public class Vault {
     public ReleaseCondition getCondition() {
         return condition;
     }
+    public VaultOwner getOwner() {
+    return owner;
+    }
 }
