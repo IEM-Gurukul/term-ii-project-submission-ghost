@@ -26,6 +26,12 @@ public class VaultManager {
         vaults.add(vault);
     }
 
+    public Vault createVault(String id, User owner) {
+        Vault vault = new Vault("RestoredVault-" + id, owner);
+        vaults.add(vault);
+        return vault;
+    }
+
     public List<Vault> getVaultsByUser(User user) {
         return vaults.stream()
                      .filter(v -> v.getOwner().equals(user))
@@ -43,4 +49,3 @@ public class VaultManager {
     public List<Vault> getAllVaults() { return vaults; }
     public void setVaults(List<Vault> vaults) { this.vaults = vaults; }
 }
-
