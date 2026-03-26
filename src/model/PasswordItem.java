@@ -1,17 +1,21 @@
 package model;
 
 public class PasswordItem extends VaultItem {
-    private String username;
     private String password;
 
-    public PasswordItem(String title, String username, String password) {
-        super(title);
-        this.username = username;
+    public PasswordItem(String name, String password) {
+        super(name);
         this.password = password;
     }
 
     @Override
-    public String getType() {
-        return "PASSWORD";
+    public String getDetails() {
+        return "Password Item: " + getName();
+    }
+
+    // Overloading
+    public String getPassword() { return password; }
+    public String getPassword(boolean masked) {
+        return masked ? "****" : password;
     }
 }

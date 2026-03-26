@@ -1,22 +1,20 @@
 package strategy;
 
 import model.Vault;
-
 import java.time.LocalDateTime;
-import java.time.Duration;
 
-public class InactivityCondition implements ReleaseCondition {
+public class InactivityCondition extends ReleaseCondition {
+    private LocalDateTime lastActive;
+    private int inactivityMinutes;
 
-    private long minutes;
-
-    public InactivityCondition(long minutes) {
-        this.minutes = minutes;
+    public InactivityCondition(LocalDateTime lastActive, int inactivityMinutes) {
+        this.lastActive = lastActive;
+        this.inactivityMinutes = inactivityMinutes;
     }
 
     @Override
     public boolean shouldRelease(Vault vault) {
-        LocalDateTime lastActive = vault.getNominee().getLastActive();
-        long inactive = Duration.between(lastActive, LocalDateTime.now()).toMinutes();
-        return inactive >= minutes;
+        LocalDateTime now = LocalDateTime.now();
+        return lastActive.plusMinutes(inactivityMinutes).isBefore(now);
     }
 }

@@ -1,9 +1,9 @@
 package model;
 
 import strategy.ReleaseCondition;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Vault {
     private String vaultId;
@@ -18,30 +18,24 @@ public class Vault {
         this.items = new ArrayList<>();
     }
 
-    public void addItem(VaultItem item) {
-        items.add(item);
-    }
+    public String getId() { return vaultId; }
+    public VaultOwner getOwner() { return owner; }
 
-    public List<VaultItem> getItems() {
-        return items;
-    }
+    public void addItem(VaultItem item) { items.add(item); }
+    public List<VaultItem> getItems() { return items; }
 
-    public void setNominee(Nominee nominee) {
-        this.nominee = nominee;
-    }
+    public void setNominee(Nominee nominee) { this.nominee = nominee; }
+    public Nominee getNominee() { return nominee; }
 
-    public Nominee getNominee() {
-        return nominee;
-    }
+    public void setCondition(ReleaseCondition condition) { this.condition = condition; }
+    public ReleaseCondition getCondition() { return condition; }
 
-    public void setCondition(ReleaseCondition condition) {
-        this.condition = condition;
-    }
-
-    public ReleaseCondition getCondition() {
-        return condition;
-    }
-    public VaultOwner getOwner() {
-    return owner;
+    // Streams + Collections
+    public String listItemDetails() {
+        return items.stream()
+                .map(VaultItem::getDetails)
+                .collect(Collectors.joining("\n"));
     }
 }
+
+

@@ -3,31 +3,26 @@ package security;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.util.Base64;
 
 public class EncryptionService {
+    private SecretKey key;
 
-    private static SecretKey key;
-
-    static {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(128);
-            key = keyGen.generateKey();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+    public EncryptionService() throws Exception {
+        KeyGenerator generator = KeyGenerator.getInstance("AES");
+        generator.init(128);
+        key = generator.generateKey();
     }
 
-    
-    public static byte[] encrypt(byte[] data) throws Exception {
+    public String encrypt(String data) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, key);
-        return cipher.doFinal(data);
+        return Base64.getEncoder().encodeToString(cipher.doFinal(data.getBytes()));
     }
 
-    public static byte[] decrypt(byte[] encrypted) throws Exception {
+    public String decrypt(String encrypted) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, key);
-        return cipher.doFinal(encrypted);
+        return new String(cipher.doFinal(Base64.getDecoder().decode(encrypted)));
     }
 }

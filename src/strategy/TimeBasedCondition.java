@@ -1,15 +1,13 @@
 package strategy;
 
 import model.Vault;
-
 import java.time.LocalDateTime;
 
-public class TimeBasedCondition implements ReleaseCondition {
-
+public class TimeBasedCondition extends ReleaseCondition {
     private LocalDateTime releaseTime;
 
-    public TimeBasedCondition(LocalDateTime time) {
-        this.releaseTime = time;
+    public TimeBasedCondition(LocalDateTime releaseTime) {
+        this.releaseTime = releaseTime;
     }
 
     @Override

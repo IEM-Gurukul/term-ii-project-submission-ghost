@@ -2,61 +2,29 @@ package monitor;
 
 import manager.VaultManager;
 import model.Vault;
-import strategy.ReleaseCondition;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import java.util.Collection;
 
 public class VaultMonitor extends Thread {
-
     private VaultManager vaultManager;
 
-    public VaultMonitor() {
-        this.vaultManager = VaultManager.getInstance();
+    public VaultMonitor(VaultManager vaultManager) {
+        this.vaultManager = vaultManager;
     }
 
     @Override
     public void run() {
-        while(true) {
+        while (true) {
+            vaultManager.getAllVaults().stream()
+                .filter(v -> v.getCondition() != null && v.getCondition().shouldRelease(v))
+                .forEach(v -> {
+                    System.out.println("Vault " + v.getId() +
+                        " released to nominee: " + (v.getNominee() != null ? v.getNominee().getEmail() : "No nominee assigned"));
+                });
+
             try {
-                Thread.sleep(5000);
-
-                Collection<Vault> vaults = vaultManager.getAllVaults();
-
-                for(Vault v : vaults) {
-                    ReleaseCondition condition = v.getCondition();
-
-                    if(condition != null && condition.shouldRelease(v)) {
-                        releaseVault(v);
-                    }
-                }
-
-            } 
-            catch(Exception e) {
-                e.printStackTrace();
+                Thread.sleep(5000); // check every 5 seconds
+            } catch (InterruptedException e) {
+                System.err.println("VaultMonitor interrupted: " + e.getMessage());
             }
         }
-    }
-
-    private void releaseVault(Vault vault) {
-
-        
-        System.out.println("Vault Released for Nominee: " + vault.getNominee().getEmail());
-
-        vault.getItems().forEach(item -> {
-            System.out.println("Item: " + item.getTitle() + " Type: " + item.getType());
-        });
-
-        
-        SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(
-                null,
-                "Vault Released Successfully!\nNominee: " + vault.getNominee().getEmail(),
-                "Vault Alert",
-                JOptionPane.INFORMATION_MESSAGE
-            );
-        });
     }
 }

@@ -1,22 +1,21 @@
 package auth;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class PasswordHasher {
-
-    public static String hash(String password) {
+    public static String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(password.getBytes());
-
-            StringBuilder hex = new StringBuilder();
-            for(byte b : hash) {
-                hex.append(String.format("%02x", b));
+            byte[] hashed = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashed) {
+                // Wrapper class usage: Byte to int
+                sb.append(Integer.toHexString(Byte.toUnsignedInt(b)));
             }
-
-            return hex.toString();
-        } catch(Exception e) {
-            throw new RuntimeException("Hashing failed");
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Hashing algorithm not found", e);
         }
     }
 }

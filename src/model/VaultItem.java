@@ -1,19 +1,13 @@
 package model;
 
-import java.time.LocalDateTime;
-
 public abstract class VaultItem {
-    protected String title;
-    protected LocalDateTime createdAt;
+    private String name;
 
-    public VaultItem(String title) {
-        this.title = title;
-        this.createdAt = LocalDateTime.now();
+    public VaultItem(String name) {
+        this.name = name;
     }
 
-    public abstract String getType();
+    public String getName() { return name; }
 
-    public String getTitle() {
-        return title;
-    }
+    public abstract String getDetails(); // overridden by subclasses
 }

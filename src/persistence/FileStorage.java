@@ -4,22 +4,15 @@ import java.io.*;
 
 public class FileStorage {
 
-    public static void save(String fileName, String data) throws Exception {
-        FileWriter writer = new FileWriter(fileName);
-        writer.write(data);
-        writer.close();
+    public static void saveObject(Object obj, String filePath) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(obj);
+        }
     }
 
-    public static String load(String fileName) throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader(fileName));
-        StringBuilder data = new StringBuilder();
-
-        String line;
-        while((line = reader.readLine()) != null) {
-            data.append(line);
+    public static Object loadObject(String filePath) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            return ois.readObject();
         }
-
-        reader.close();
-        return data.toString();
     }
 }

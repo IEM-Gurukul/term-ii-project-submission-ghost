@@ -1,36 +1,41 @@
 package gui;
 
-import manager.UserManager;
 import manager.VaultManager;
+import model.Nominee;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class NomineeGUI extends JFrame {
+    private VaultManager vaultManager;
 
     public NomineeGUI() {
+        vaultManager = VaultManager.getInstance();
 
         setTitle("Assign Nominee");
-        setSize(300,150);
-        setLayout(new GridLayout(2,2));
+        setSize(400, 200);
+        setLayout(new GridLayout(3, 2));
 
-        JTextField email = new JTextField();
-        JButton assign = new JButton("Assign");
+        JLabel nameLabel = new JLabel("Nominee Name:");
+        JTextField nameField = new JTextField();
+        JLabel emailLabel = new JLabel("Nominee Email:");
+        JTextField emailField = new JTextField();
+        JButton assignBtn = new JButton("Assign");
 
-        assign.addActionListener(e -> {
-            try {
-                VaultManager.getInstance()
-                    .assignNominee("vault1", email.getText(), new UserManager());
-
-                JOptionPane.showMessageDialog(this, "Nominee Assigned!");
-            } catch(Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage());
-            }
+        assignBtn.addActionListener(e -> {
+            String name = nameField.getText();
+            String email = emailField.getText();
+            Nominee nominee = new Nominee(name, email, "hashedPasswordHere");
+            vaultManager.assignNominee("vault1", nominee);
+            JOptionPane.showMessageDialog(this, "Nominee assigned successfully!");
         });
 
-        add(new JLabel("Nominee Email"));
-        add(email);
-        add(assign);
+        add(nameLabel);
+        add(nameField);
+        add(emailLabel);
+        add(emailField);
+        add(new JLabel()); // spacer
+        add(assignBtn);
 
         setVisible(true);
     }

@@ -1,52 +1,54 @@
 package gui;
 
 import auth.AuthService;
-import manager.UserManager;
-import model.VaultOwner;
 import auth.PasswordHasher;
+import auth.Session;
+import auth.SessionManager;
+import exception.AuthenticateUserException;
+import manager.UserManager;
+import model.User;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class LoginGUI extends JFrame {
-
-    private UserManager userManager;
     private AuthService authService;
+    private SessionManager sessionManager;
 
     public LoginGUI() {
-        userManager = new UserManager();
-        authService = new AuthService(userManager);
-
-        // Dummy user (for testing)
-        try {
-            userManager.registerUser(
-                new VaultOwner("Admin", "admin@mail.com", PasswordHasher.hash("1234"))
-            );
-        } catch(Exception e){}
+        authService = new AuthService();
+        sessionManager = SessionManager.getInstance();
 
         setTitle("Legacy Lock - Login");
-        setSize(350,200);
-        setLayout(new GridLayout(3,2));
+        setSize(400, 200);
+        setLayout(new GridLayout(3, 2));
 
-        JTextField email = new JTextField();
-        JPasswordField password = new JPasswordField();
-        JButton loginBtn = new JButton("Login");
+        JLabel emailLabel = new JLabel("Email:");
+        JTextField emailField = new JTextField();
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField();
+        JButton loginButton = new JButton("Login");
 
-        loginBtn.addActionListener(e -> {
+        loginButton.addActionListener(e -> {
+            String email = emailField.getText();
+            String passwordHash = PasswordHasher.hashPassword(new String(passwordField.getPassword()));
             try {
-                authService.login(email.getText(), new String(password.getPassword()));
-                new DashboardGUI();
+                User user = authService.login(email, passwordHash);
+                sessionManager.createSession(email, new Session(user));
+                JOptionPane.showMessageDialog(this, "Login successful!");
                 dispose();
-            } catch(Exception ex) {
+                new DashboardGUI();
+            } catch (AuthenticateUserException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
         });
 
-        add(new JLabel("Email"));
-        add(email);
-        add(new JLabel("Password"));
-        add(password);
-        add(loginBtn);
+        add(emailLabel);
+        add(emailField);
+        add(passwordLabel);
+        add(passwordField);
+        add(new JLabel()); 
+        add(loginButton);
 
         setVisible(true);
     }

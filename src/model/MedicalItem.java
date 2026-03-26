@@ -1,15 +1,15 @@
 package model;
 
 public class MedicalItem extends VaultItem {
-    private String reportDetails;
+    private String recordId;
 
-    public MedicalItem(String title, String reportDetails) {
-        super(title);
-        this.reportDetails = reportDetails;
+    public MedicalItem(String name, String recordId) {
+        super(name);
+        this.recordId = recordId;
     }
 
     @Override
-    public String getType() {
-        return "MEDICAL";
+    public String getDetails() {
+        return "Medical Record: " + getName() + " (ID: " + recordId + ")";
     }
 }

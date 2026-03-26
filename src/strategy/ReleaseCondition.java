@@ -2,6 +2,6 @@ package strategy;
 
 import model.Vault;
 
-public interface ReleaseCondition {
-    boolean shouldRelease(Vault vault);
+public abstract class ReleaseCondition {
+    public abstract boolean shouldRelease(Vault vault);
 }

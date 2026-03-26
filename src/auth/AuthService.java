@@ -1,34 +1,24 @@
 package auth;
 
+import exception.AuthenticateUserException;
 import manager.UserManager;
 import model.User;
-import exception.AuthenticationException;
 
 public class AuthService {
-
     private UserManager userManager;
 
-    public AuthService(UserManager userManager) {
-        this.userManager = userManager;
+    public AuthService() {
+        this.userManager = UserManager.getInstance();
     }
 
-    public User login(String email, String password) throws AuthenticationException {
-
-        User user = userManager.getUser(email);
-
-        if(user == null) {
-            throw new AuthenticationException("User not found!");
+    public User login(String email, String passwordHash) throws AuthenticateUserException {
+        User user = userManager.findUserByEmail(email);
+        if (user == null) {
+            throw new AuthenticateUserException("User not found with email: " + email);
         }
-
-        String hashed = PasswordHasher.hash(password);
-
-        if(!user.getPasswordHash().equals(hashed)) {
-            throw new AuthenticationException("Incorrect password!");
+        if (!user.getPasswordHash().equals(passwordHash)) {
+            throw new AuthenticateUserException("Invalid password for user: " + email);
         }
-
-        Session session = new Session(user);
-        SessionManager.createSession(session);
-
         return user;
     }
 }

@@ -1,76 +1,52 @@
 package manager;
-import model.*;
-import exception.DuplicateUserException;
 
-import java.util.*;
-import manager.UserManager;
-import exception.AuthenticationException;
+import model.Vault;
+import model.VaultOwner;
+import model.Nominee;
+import model.VaultItem;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VaultManager {
-
     private static VaultManager instance;
-    private Map<String, Vault> vaults;
+    private ConcurrentHashMap<String, Vault> vaults;
 
     private VaultManager() {
-        vaults = new HashMap<>();
+        vaults = new ConcurrentHashMap<>();
     }
 
-    // Singleton Pattern
-    public static VaultManager getInstance() {
-        if(instance == null) {
-            instance = new VaultManager();
-        }
+    public static synchronized VaultManager getInstance() {
+        if (instance == null) instance = new VaultManager();
         return instance;
     }
 
-    // Create Vault
-    public void createVault(String vaultId, VaultOwner owner) throws Exception {
-        if(vaults.containsKey(vaultId)) {
-            throw new Exception("Vault already exists!");
+    public void createVault(String id, VaultOwner owner) {
+        if (vaults.containsKey(id)) {
+            throw new RuntimeException("Duplicate Vault ID: " + id);
         }
-        vaults.put(vaultId, new Vault(vaultId, owner));
+        vaults.put(id, new Vault(id, owner));
     }
 
-    // Add Item (Overloading concept)
-    public void addItem(String vaultId, VaultItem item) throws Exception {
-        Vault v = vaults.get(vaultId);
-        if(v == null) throw new Exception("Vault not found!");
-        v.addItem(item);
+    public Vault getVault(String id) {
+        return vaults.get(id);
     }
 
-    public void addItem(String vaultId, List<VaultItem> items) throws Exception {
-        for(VaultItem i : items) {
-            addItem(vaultId, i);
-        }
+    public List<Vault> getAllVaults() {
+        return vaults.values().stream().collect(Collectors.toList());
     }
 
-    public Vault getVault(String vaultId) {
-        return vaults.get(vaultId);
-    }
-
-    public Collection<Vault> getAllVaults() {
-        return vaults.values();
-    }
-
-    public void assignNominee(String vaultId, String nomineeEmail, UserManager userManager) throws Exception {
+    public void assignNominee(String vaultId, Nominee nominee) {
         Vault vault = vaults.get(vaultId);
-        if(vault == null) {
-            throw new Exception("Vault not found!");
+        if (vault != null) {
+            vault.setNominee(nominee);
         }
-
-        if(!userManager.isRegistered(nomineeEmail)) {
-            throw new Exception("Nominee must be a registered user!");
-        }
-        vault.setNominee((model.Nominee) userManager.getUser(nomineeEmail));
     }
 
-    public void createVault(String vaultId, VaultOwner owner) throws Exception {
-
-        for(Vault v : vaults.values()) {
-            if(v.getOwner().getEmail().equals(owner.getEmail())) {
-            throw new Exception("User already owns a vault!");
-            }
+    public void addItemToVault(String vaultId, VaultItem item) {
+        Vault vault = vaults.get(vaultId);
+        if (vault != null) {
+            vault.addItem(item);
         }
-        vaults.put(vaultId, new Vault(vaultId, owner));
     }
 }
