@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class VaultManager {
     private static VaultManager instance;
-    private final List<Vault> vaults;
+    private List<Vault> vaults;
 
     private VaultManager() {
         vaults = new ArrayList<>();
@@ -29,5 +29,14 @@ public class VaultManager {
         return vaults.stream()
                      .filter(v -> v.getOwner().equals(user))
                      .collect(Collectors.toList());
+    }
+
+    // For persistence
+    public List<Vault> getAllVaults() {
+        return vaults;
+    }
+
+    public void setVaults(List<Vault> vaults) {
+        this.vaults = vaults;
     }
 }

@@ -12,14 +12,18 @@ import java.util.List;
 public class DashboardGUI extends JFrame {
 
     public DashboardGUI(User user) {
+        
         SessionManager.setActiveUser(user);
 
         setTitle("LegacyLock Dashboard - " + user.getName());
-        setSize(400, 400);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new java.awt.GridLayout(0, 1));
 
-        // Register new user
+        
+        JLabel activeUserLabel = new JLabel("Active User: " + user.getName() + " (" + user.getEmail() + ")");
+        add(activeUserLabel);
+
         JButton registerButton = new JButton("Register New User");
         registerButton.addActionListener(e -> {
             String name = JOptionPane.showInputDialog(this, "Enter your name:");
@@ -37,8 +41,8 @@ public class DashboardGUI extends JFrame {
                 }
             }
         });
+        add(registerButton);
 
-        // Create vault
         JButton createVaultButton = new JButton("Create Vault");
         createVaultButton.addActionListener(e -> {
             User currentUser = SessionManager.getActiveUser();
@@ -49,8 +53,8 @@ public class DashboardGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "Vault created for " + currentUser.getName());
             }
         });
+        add(createVaultButton);
 
-        // View vaults
         JButton viewVaultsButton = new JButton("View My Vaults");
         viewVaultsButton.addActionListener(e -> {
             User currentUser = SessionManager.getActiveUser();
@@ -65,8 +69,20 @@ public class DashboardGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, sb.toString());
             }
         });
+        add(viewVaultsButton);
 
-        // Switch user
+        JButton assignNomineeButton = new JButton("Assign Nominee");
+        assignNomineeButton.addActionListener(e -> {
+            new NomineeGUI(SessionManager.getActiveUser());
+        });
+        add(assignNomineeButton);
+
+        JButton uploadFileButton = new JButton("Upload File");
+        uploadFileButton.addActionListener(e -> {
+            new FileUploadGUI(SessionManager.getActiveUser());
+        });
+        add(uploadFileButton);
+
         JButton switchUserButton = new JButton("Switch User");
         switchUserButton.addActionListener(e -> {
             String email = JOptionPane.showInputDialog(this, "Enter email of user to switch:");
@@ -80,12 +96,19 @@ public class DashboardGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "User not found!");
             }
         });
-
-        // Add buttons
-        add(registerButton);
-        add(createVaultButton);
-        add(viewVaultsButton);
         add(switchUserButton);
+
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(e -> {
+            User guest = UserManager.getInstance().getUserByEmail("guest@mail.com");
+            if (guest != null) {
+                SessionManager.setActiveUser(guest);
+                JOptionPane.showMessageDialog(this, "Logged out, back to Guest.");
+                dispose();
+                new DashboardGUI(guest);
+            }
+        });
+        add(logoutButton);
 
         setVisible(true);
     }

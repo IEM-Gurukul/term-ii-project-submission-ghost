@@ -1,30 +1,46 @@
 package manager;
 
-import exception.DuplicateUserException;
 import model.User;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserManager {
     private static UserManager instance;
-    private ConcurrentHashMap<String, User> users;
+    private List<User> users;
 
     private UserManager() {
-        users = new ConcurrentHashMap<>();
+        users = new ArrayList<>();
     }
 
-    public static synchronized UserManager getInstance() {
-        if (instance == null) instance = new UserManager();
+    public static UserManager getInstance() {
+        if (instance == null) {
+            instance = new UserManager();
+        }
         return instance;
     }
 
-    public void registerUser(User user) throws DuplicateUserException {
-        if (users.containsKey(user.getEmail())) {
-            throw new DuplicateUserException("User with email " + user.getEmail() + " already exists.");
+    public void registerUser(User user) throws Exception {
+        if (getUserByEmail(user.getEmail()) != null) {
+            throw new Exception("User already exists with email: " + user.getEmail());
         }
-        users.put(user.getEmail(), user);
+        users.add(user);
     }
 
-    public User findUserByEmail(String email) {
-        return users.get(email);
+    public User getUserByEmail(String email) {
+        for (User u : users) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+    // For persistence
+    public List<User> getAllUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }
