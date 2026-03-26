@@ -12,7 +12,6 @@ import java.util.List;
 public class DashboardGUI extends JFrame {
 
     public DashboardGUI(User user) {
-        
         SessionManager.setActiveUser(user);
 
         setTitle("LegacyLock Dashboard - " + user.getName());
@@ -20,7 +19,6 @@ public class DashboardGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new java.awt.GridLayout(0, 1));
 
-        
         JLabel activeUserLabel = new JLabel("Active User: " + user.getName() + " (" + user.getEmail() + ")");
         add(activeUserLabel);
 
@@ -113,4 +111,3 @@ public class DashboardGUI extends JFrame {
         setVisible(true);
     }
 }
-
