@@ -4,6 +4,9 @@ import manager.VaultManager;
 import model.Vault;
 import strategy.ReleaseCondition;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import java.util.Collection;
 
 public class VaultMonitor extends Thread {
@@ -19,6 +22,7 @@ public class VaultMonitor extends Thread {
         while(true) {
             try {
                 Thread.sleep(5000);
+
                 Collection<Vault> vaults = vaultManager.getAllVaults();
 
                 for(Vault v : vaults) {
@@ -29,17 +33,30 @@ public class VaultMonitor extends Thread {
                     }
                 }
 
-            } catch(Exception e) {
+            } 
+            catch(Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
     private void releaseVault(Vault vault) {
+
+        
         System.out.println("Vault Released for Nominee: " + vault.getNominee().getEmail());
 
         vault.getItems().forEach(item -> {
             System.out.println("Item: " + item.getTitle() + " Type: " + item.getType());
+        });
+
+        
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(
+                null,
+                "Vault Released Successfully!\nNominee: " + vault.getNominee().getEmail(),
+                "Vault Alert",
+                JOptionPane.INFORMATION_MESSAGE
+            );
         });
     }
 }
