@@ -1,24 +1,19 @@
 package gui;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class FileUploadGUI extends JFrame {
     public FileUploadGUI() {
-        setTitle("Upload File to Vault");
-        setSize(400, 200);
-        setLayout(new FlowLayout());
+        setTitle("Upload File");
+        setSize(300, 200);
+        setLayout(new java.awt.GridLayout(0, 1));
 
-        JButton uploadBtn = new JButton("Choose File");
-        uploadBtn.addActionListener(e -> {
-            JFileChooser chooser = new JFileChooser();
-            int result = chooser.showOpenDialog(this);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                JOptionPane.showMessageDialog(this, "File uploaded: " + chooser.getSelectedFile().getName());
-            }
+        JButton uploadButton = new JButton("Upload File");
+        uploadButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "File upload feature coming soon!");
         });
 
-        add(uploadBtn);
+        add(uploadButton);
         setVisible(true);
     }
 }

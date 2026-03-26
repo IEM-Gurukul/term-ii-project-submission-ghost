@@ -2,6 +2,7 @@ package manager;
 
 import model.User;
 import model.Vault;
+import model.Nominee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,12 +32,15 @@ public class VaultManager {
                      .collect(Collectors.toList());
     }
 
-    // For persistence
-    public List<Vault> getAllVaults() {
-        return vaults;
+    public void assignNominee(String vaultName, Nominee nominee) {
+        for (Vault v : vaults) {
+            if (v.getName().equals(vaultName)) {
+                v.setNominee(nominee);
+            }
+        }
     }
 
-    public void setVaults(List<Vault> vaults) {
-        this.vaults = vaults;
-    }
+    public List<Vault> getAllVaults() { return vaults; }
+    public void setVaults(List<Vault> vaults) { this.vaults = vaults; }
 }
+

@@ -1,7 +1,6 @@
 package manager;
 
 import model.User;
-
 public class SessionManager {
     private static User activeUser;
 

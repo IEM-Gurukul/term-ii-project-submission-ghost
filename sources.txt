@@ -2,7 +2,7 @@ src/auth/AuthService.java
 src/auth/PasswordHasher.java
 src/auth/Session.java
 src/auth/SessionManager.java
-src/exception/AuthenticationUserException.java
+src/exception/AuthenticateUserException.java
 src/exception/DuplicateUserException.java
 src/gui/DashboardGUI.java
 src/gui/FileUploadGUI.java
@@ -21,6 +21,7 @@ src/model/VaultItem.java
 src/model/VaultOwner.java
 src/monitor/VaultMonitor.java
 src/persistence/FileStorage.java
+src/persistence/PersistenceManager.java
 src/persistence/VaultRepository.java
 src/security/EncryptionService.java
 src/strategy/InactivityCondition.java

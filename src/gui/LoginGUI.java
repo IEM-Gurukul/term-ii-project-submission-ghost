@@ -3,7 +3,7 @@ package gui;
 import auth.AuthService;
 import auth.PasswordHasher;
 import auth.Session;
-import auth.SessionManager;
+import manager.SessionManager;
 import exception.AuthenticateUserException;
 import manager.UserManager;
 import model.User;

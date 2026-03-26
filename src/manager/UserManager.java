@@ -35,12 +35,6 @@ public class UserManager {
         return null;
     }
 
-    // For persistence
-    public List<User> getAllUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+    public List<User> getAllUsers() { return users; }
+    public void setUsers(List<User> users) { this.users = users; }
 }
