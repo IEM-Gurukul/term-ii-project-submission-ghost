@@ -5,6 +5,9 @@ import model.DocumentItem;
 
 import javax.swing.*;
 import java.io.File;
+import java.nio.file.Files;
+
+import security.EncryptionService;
 
 public class FileUploadGUI extends JFrame {
 
@@ -22,12 +25,22 @@ public class FileUploadGUI extends JFrame {
                 File file = chooser.getSelectedFile();
 
                 try {
-                    VaultManager.getInstance()
-                        .addItem("vault1", new DocumentItem(file.getName(), file.getPath()));
+                    
+                    byte[] fileData = Files.readAllBytes(file.toPath());
 
-                    JOptionPane.showMessageDialog(this, "File Uploaded!");
+                    
+                    byte[] encryptedData = EncryptionService.encrypt(fileData);
+
+                    
+                    DocumentItem item = new DocumentItem(file.getName(), encryptedData);
+
+                    VaultManager.getInstance()
+                        .addItem("vault1", item);
+
+                    JOptionPane.showMessageDialog(this, "File Uploaded & Encrypted!");
+
                 } catch(Exception ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
                 }
             }
         });

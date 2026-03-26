@@ -18,15 +18,16 @@ public class EncryptionService {
         }
     }
 
-    public static byte[] encrypt(String data) throws Exception {
+    
+    public static byte[] encrypt(byte[] data) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, key);
-        return cipher.doFinal(data.getBytes());
+        return cipher.doFinal(data);
     }
 
-    public static String decrypt(byte[] encrypted) throws Exception {
+    public static byte[] decrypt(byte[] encrypted) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, key);
-        return new String(cipher.doFinal(encrypted));
+        return cipher.doFinal(encrypted);
     }
 }
