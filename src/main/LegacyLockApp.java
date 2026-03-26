@@ -1,21 +1,22 @@
 package main;
 
-import gui.LoginGUI;
-import manager.UserManager;
+import gui.DashboardGUI;
 import model.User;
 import auth.PasswordHasher;
+import manager.UserManager;
 
 public class LegacyLockApp {
     public static void main(String[] args) {
-        UserManager userManager = UserManager.getInstance();
-        User admin = new User("Admin", "admin@mail.com", PasswordHasher.hashPassword("1234"));
+        
+        User guest = new User("Guest", "guest@mail.com", PasswordHasher.hashPassword("guest"));
         try {
-            userManager.registerUser(admin);
+            UserManager.getInstance().registerUser(guest);
         } catch (Exception e) {
-            System.err.println("Admin already registered.");
+            System.err.println("Guest already registered.");
         }
 
-        // Launch login GUI
-        new LoginGUI();
+    
+        new DashboardGUI(guest);
     }
 }
+

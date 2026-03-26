@@ -1,29 +1,15 @@
-package auth;
+package manager;
 
-import java.util.concurrent.ConcurrentHashMap;
+import model.User;
 
 public class SessionManager {
-    private static SessionManager instance;
-    private ConcurrentHashMap<String, Session> sessions;
+    private static User activeUser;
 
-    private SessionManager() {
-        sessions = new ConcurrentHashMap<>();
+    public static void setActiveUser(User user) {
+        activeUser = user;
     }
 
-    public static synchronized SessionManager getInstance() {
-        if (instance == null) instance = new SessionManager();
-        return instance;
-    }
-
-    public void createSession(String email, Session session) {
-        sessions.put(email, session);
-    }
-
-    public Session getSession(String email) {
-        return sessions.get(email);
-    }
-
-    public void endSession(String email) {
-        sessions.remove(email);
+    public static User getActiveUser() {
+        return activeUser;
     }
 }
