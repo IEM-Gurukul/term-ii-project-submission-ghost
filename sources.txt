@@ -17,6 +17,7 @@ src/model/Nominee.java
 src/model/PasswordItem.java
 src/model/User.java
 src/model/Vault.java
+src/model/VaultCondition.java
 src/model/VaultItem.java
 src/model/VaultOwner.java
 src/monitor/VaultMonitor.java
